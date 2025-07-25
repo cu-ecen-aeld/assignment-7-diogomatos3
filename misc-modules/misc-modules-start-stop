@@ -4,17 +4,21 @@ case "$1" in
     start)
         # If the argument is "start", print a message and start the hello and faulty daemon
         echo "Starting init script for misc-modules Loading"
-        start-stop-daemon -S -n init -a /usr/bin/misc-modules_load -- hello
-        start-stop-daemon -S -n init -a /usr/bin/misc-modules_load -- faulty
+        if ! lsmod | grep -q hello; then
+            start-stop-daemon -S -n init -a /usr/bin/misc-modules_load -- hello
+        fi
+        if ! lsmod | grep -q faulty; then
+            start-stop-daemon -S -n init -a /usr/bin/misc-modules_load -- faulty
+        fi
         ;;
-stop)
+    stop)
         # If the argument is "stop", print a message and stop the hello and faulty daemon
         echo "Removing user misc-modules"
         start-stop-daemon -K -n misc-modules_load
         start-stop-daemon -S -n init -a /usr/bin/misc-modules_unload -- hello
         start-stop-daemon -S -n init -a /usr/bin/misc-modules_unload -- faulty
         ;;
-*)
+    *)
         # If the argument is not "start" or "stop", print usage information and exit with an error code
         echo "Usage: $0 {start|stop}"
         exit 1
