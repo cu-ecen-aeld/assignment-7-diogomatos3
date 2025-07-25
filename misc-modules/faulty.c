@@ -75,7 +75,7 @@ int faulty_init(void)
 		return result;
 	if (faulty_major == 0)
 		faulty_major = result; /* dynamic */
-
+        printk(KERN_INFO "faulty module loaded with major number %d\n", faulty_major);
 	return 0;
 }
 
